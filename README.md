@@ -10,7 +10,7 @@ Este repositorio contiene el análisis cuantitativo de la pérdida de vegetació
 
 ## Fuente de los datos
 
-- Información obtenida de [Biomapas](https://www.biomapas.com.ar).
+- Información obtenida de [Biomapas]([https://www.biomapas.com.ar)](https://plataforma.argentina.mapbiomas.org/coverage/coverage_lclu?tl[id]=1&tl[themeKey]=coverage&tl[subthemeKey]=coverage_lclu&tl[pixelValues][]=27&tl[pixelValues][]=15&tl[pixelValues][]=9&tl[pixelValues][]=21&tl[pixelValues][]=19&tl[pixelValues][]=36&tl[pixelValues][]=3&tl[pixelValues][]=4&tl[pixelValues][]=6&tl[pixelValues][]=34&tl[pixelValues][]=33&tl[pixelValues][]=77&tl[pixelValues][]=63&tl[pixelValues][]=12&tl[pixelValues][]=11&tl[pixelValues][]=66&tl[pixelValues][]=73&tl[pixelValues][]=24&tl[pixelValues][]=25&tl[legendKey]=default&tl[year]=2024&t[regionKey]=argentina&t[ids][]=17-1-1&t[divisionCategoryId]=2).
 
 ## Uso
 

@@ -1,8 +1,16 @@
-setwd("D:/Josefina/Proyectos/Bosques/data")
+
+##Objetivo
+#Analisis de puntos de pivotes de riego
+
+setwd("D:/Josefina/Proyectos/Bosques/codigo")
 
 
 library(ggplot2)
 library(dplyr)
+
+#Dataset generado a partir de informacion obtenida de:
+# https://obs-idecor-mapas-docs.obs.sa-argentina-1.myhuaweicloud.com/m482/INFORME-Mapa-de-Coberturas-y-usos-del-Suelo-2022-23.pdf
+# https://www.researchgate.net/publication/278965733_EVOLUCION_DEL_AREA_REGADA_CON_PIVOTE_CENTRAL_EN_LA_PROVINCIA_DE_CORDOBA_EN_EL_PERIODO_1994-2014
 
 data_riego <- data.frame(
   year = factor(c(2022, 2023, 2024), levels = c(2022, 2023, 2024)),

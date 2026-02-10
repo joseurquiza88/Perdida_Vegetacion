@@ -10,7 +10,7 @@ Este repositorio contiene el análisis cuantitativo de la pérdida de vegetació
 
 ## Fuente de los datos
 
-- Información obtenida de [Biomapas](https://www.biomapas.com.ar).
+- Información obtenida de [Biomapas](https://plataforma.argentina.mapbiomas.org/)
 
 ## Uso
 

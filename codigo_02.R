@@ -1,17 +1,17 @@
-
 ##Objetivo
-#Analisis de puntos de pivotes de riego
+#Realizar diversos analisis sobre coebertura, bosques en el Chaco Seco
+#en la provincia de Cordoba
 
 setwd("D:/Josefina/Proyectos/Bosques/codigo")
 
-
+#Librerias
 library(ggplot2)
 library(dplyr)
 
-#Dataset generado a partir de informacion obtenida de:
-# https://obs-idecor-mapas-docs.obs.sa-argentina-1.myhuaweicloud.com/m482/INFORME-Mapa-de-Coberturas-y-usos-del-Suelo-2022-23.pdf
-# https://www.researchgate.net/publication/278965733_EVOLUCION_DEL_AREA_REGADA_CON_PIVOTE_CENTRAL_EN_LA_PROVINCIA_DE_CORDOBA_EN_EL_PERIODO_1994-2014
 
+###############################################################################
+# Dataset con el numero y superficie del riego por pivot en la zona de estudio
+#Extraido de:
 data_riego <- data.frame(
   year = factor(c(2022, 2023, 2024), levels = c(2022, 2023, 2024)),
   puntos_total = c(1709, 1835, 1848),

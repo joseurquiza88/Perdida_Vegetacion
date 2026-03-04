@@ -33,8 +33,8 @@ no_obs <- c(27)
 #Y pixel en 2001 ∈ agro_ids
 # → entonces es cambio
 #Pixel es de 30m
-# cambio <- (r2000 %in% bosque_ids) & (r2001 %in% agro_ids)
-cambio <- (r2000 %in% bosque_ids) & (r2001 %in% no_obs)
+cambio <- (r2000 %in% bosque_ids) & (r2001 %in% agro_ids)
+
 cambio_bin <- ifel(cambio, 1, NA)
 #plot(cambio_bin)
 # writeRaster(cambio_bin, 
@@ -243,7 +243,7 @@ resultados <- list()
 i<-1
 for(i in 1:(length(archivos)-1)){
   
-  cat("Procesando:", anios[i], "-", anios[i+1], "\n")
+  cat("Procesando:", anios[i], "-", anios[i+1], "/n")
   
   r1 <- rast(archivos[i])
   r2 <- rast(archivos[i+1])
@@ -526,3 +526,198 @@ estructura_long %>%
   ) +
   theme_classic() +
   theme(legend.position = "none")
+
+
+##############################################################
+#Analsisi espacial
+
+library(terra)
+library(sf)
+library(dplyr)
+
+r2000 <- rast("cobertura_2000_CS.tif")
+r2001 <- rast("cobertura_2021_CS.tif")
+
+deptos <- st_read("D:/Josefina/Proyectos/Bosques/shapes/dptos_ecorregion/dptos_ecorregion.shp")
+
+deptos <- st_transform(deptos, crs(r2000))
+#plot(deptos)
+
+# unique(values(r2000))
+bosque_ids <- c(3, 4, 6, 66, 77, 63)
+#Crear máscara de bosque correctamente
+# TRUE = cualquier tipo de bosque
+# FALSE = todo lo demás
+
+bosque2000 <- r2000 %in% bosque_ids
+bosque2001 <- r2001 %in% bosque_ids
+
+
+#Calcular bosque por departamento
+deptos_vect <- vect(deptos)
+#Tarda bastante
+b2000 <- extract(bosque2000, deptos_vect, fun = sum, na.rm = TRUE)
+b2001 <- extract(bosque2001, deptos_vect, fun = sum, na.rm = TRUE)
+# tarda mucho
+# b2000_2 <- extract(
+#   bosque2000,
+#   deptos_vect,
+#   fun = sum,
+#   na.rm = TRUE,
+#   exact = TRUE
+# )
+# b2001_2 <- extract(
+#   bosque2024,
+#   deptos_vect,
+#   fun = sum,
+#   na.rm = TRUE,
+#   exact = TRUE
+# )
+#Convertir a hectáreas
+# pixel_ha <- prod(res(r2000)) / 10000
+pixel_ha <- 0.09
+
+deptos$bosque_2000_ha <- b2000[,2] * pixel_ha
+deptos$bosque_2001_ha <- b2001[,2] * pixel_ha
+
+#Calcular pérdida
+deptos$perdida_ha <- deptos$bosque_2000_ha - deptos$bosque_2001_ha
+# Si algún departamento tiene bosque_2000_ha = 0, te va a dar Inf en porcentaje.
+#Con este codigo lo evitamos
+deptos$perdida_pct <- ifelse(
+  deptos$bosque_2000_ha > 0,
+  (deptos$perdida_ha / deptos$bosque_2000_ha) * 100,
+  NA
+)
+
+
+
+
+
+
+library(terra)
+library(sf)
+library(dplyr)
+
+# 1) Leer departamentos UNA sola vez
+deptos <- st_read("D:/Josefina/Proyectos/Bosques/shapes/dptos_ecorregion/dptos_ecorregion.shp")
+
+# 2) Listar todos los tiff de la carpeta
+files <- list.files(
+  path = "D:/Josefina/Proyectos/Bosques/data/cobertura_CS/",
+  pattern = "cobertura_.*_CS.tif$",
+  full.names = TRUE
+)
+
+# 3) Extraer año desde el nombre del archivo
+years <- gsub(".*_(\\d{4})_CS.tif", "\\1", files)
+
+# 4) IDs de bosque
+bosque_ids <- c(3, 4, 6, 66, 77, 63)
+agro_ids <- c(19,36, 15, 9)
+# 5) Raster de referencia para CRS
+r_ref <- rast(files[1])
+deptos <- st_transform(deptos, crs(r_ref))
+deptos_vect <- vect(deptos)
+
+
+resultados_cambio <- data.frame()
+
+pixel_ha <- 0.09
+i<-1
+for(i in 1:(length(files) - 1)) {
+  
+  cat("Procesando transición:", years[i], "-", years[i+1], "\n")
+  
+  r_t  <- rast(files[i])
+  r_t1 <- rast(files[i+1])
+  
+  # Transición bosque → agricultura
+  cambio <- (r_t %in% bosque_ids) & (r_t1 %in% agro_ids)
+  
+  cambio_bin <- ifel(cambio, 1, NA)
+  
+  # extracción ponderada (MUY importante)
+  b <- extract(
+    cambio_bin,
+    deptos_vect,
+    fun = sum,
+    na.rm = TRUE,
+    # exact = TRUE
+  )
+  
+
+  cambio_ha <- b[,2] * pixel_ha
+  temp <- data.frame(
+    departamento = deptos$LEVEL_3,
+    periodo = paste0(years[i], "-", years[i+1]),
+    cambio_bosque_agro_ha = cambio_ha
+  )
+  
+  resultados_cambio <- rbind(resultados_cambio, temp)
+}
+
+write.csv(resultados_cambio,"resultados_cambio.csv")
+
+
+
+##
+resultados_cambio <- read.csv("resultados_cambio.csv")
+
+#Interes
+Sobremonte	
+Cruz del Eje	
+Minas	
+Punilla	
+Pocho	
+San Alberto	
+San Javier	
+Río Seco	
+Tulumba	
+Ischilín	
+Calamuchita
+departamentos_interes <- c(
+  "Sobremonte",
+  "Cruz del Eje",
+  "Minas",
+  "Punilla",
+  "Pocho",
+  "San Alberto",
+  "San Javier",
+  "Río Seco",
+  "Tulumba",
+  "Ischilín",
+  "Calamuchita"
+)
+resultados_cambio <- resultados_cambio[
+  resultados_cambio$departamento %in% departamentos_interes,
+]
+unique(resultados_cambio$departamento)
+resultados_cambio$anio_inicio <- as.numeric(substr(resultados_cambio$periodo, 1, 4))
+
+resultados_cambio <- resultados_cambio[order(resultados_cambio$anio_inicio), ]
+
+resultados_cambio$periodo <- factor(
+  resultados_cambio$periodo,
+  levels = unique(resultados_cambio$periodo)
+)
+
+breaks_periodo <- levels(resultados_cambio$periodo)[
+  seq(1, length(levels(resultados_cambio$periodo)), by = 3)
+]
+
+ggplot(resultados_cambio,
+       aes(x = periodo, y = cambio_bosque_agro_ha, group= 1)) +
+  geom_line(color = "#E974ED", linewidth = 0.8) +
+  facet_wrap(~ departamento) +
+  coord_cartesian(ylim = c(0, 16000)) +
+  scale_x_discrete(breaks = breaks_periodo) +
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  ) +
+  labs(
+    y = "Bosque → Agricultura (ha)",
+    x = "Periodo"
+    
+  )

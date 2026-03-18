@@ -19,3 +19,7 @@ Este repositorio contiene el análisis cuantitativo de la pérdida de vegetació
 - Se pueden reutilizar y adaptar para otras regiones o períodos.
 
 
+## Infografía
+
+<img width="320" height="350" alt="Dinámica de pérdida de bosque en la ecorregión del Chaco Seco Cordobés" src="https://github.com/user-attachments/assets/c9d74dea-777c-42e3-9403-e7216a87952b" />
+

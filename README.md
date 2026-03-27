@@ -13,6 +13,7 @@ Agronegocio: principal uso del suelo cambiado
 - Se calculan pérdidas anuales y acumuladas por departamento.
 - Se generan gráficos comparativos y acumulativos de pérdida de vegetación.
 - Se incluyen análisis relativos considerando el tamaño de cada departamento dentro del Chaco Seco.
+- Se muestran mapas generados en QGIS
 
 ## Fuente de los datos
 

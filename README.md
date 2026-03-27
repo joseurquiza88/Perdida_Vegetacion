@@ -1,5 +1,7 @@
 # Análisis de pérdida de vegetación – Chaco Seco, Córdoba (2000-2024)
 
+En proceso 🚧
+
 Este repositorio contiene el análisis cuantitativo de la pérdida de vegetación en la porción de la ecorregión del **Chaco Seco** que ocupa la provincia de Córdoba, durante el período **2000-2024**.
 
 ## Hipotésis principal

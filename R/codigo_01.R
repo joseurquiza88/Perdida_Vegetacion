@@ -156,7 +156,7 @@ plot <- ggplot() +
     breaks = seq(0, 12000, by = 2000)
   ) +
   
-  # Paleta final aplicada aquí 🔥
+  # Paleta final aplicada aquí 
   scale_color_manual(values = paleta_departamentos) +
   
   labs(
